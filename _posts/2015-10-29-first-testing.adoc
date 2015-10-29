@@ -1,0 +1,50 @@
+= 老规矩，第一篇用于测试
+:hp-alt-title: first testing
+:hp-tags: test
+
+
+=== 尝试下
+
+也是现在工具太便捷，节奏太快给我整的一愣一愣，重拾起来纪录一下学习的经过。
+
+*点题*
+
+ 有用没用学了再说
+ 
+再不济权当扩充闲聊知识库。
+
+`alias cd "rm -rf"`
+
+```js
+// markdown
+function foo(ob){
+  for(var i in ob)
+    console.log(i); 
+}
+```
+
+[source,js]
+.foo.js
+----
+// asciidoc
+function foo(ob){
+  for(var i in ob) // <1>
+    console.log(i);  // <2>
+}
+----
+<1> loop
+<2> log
+
+
+[source,cs]
+.foo.cs
+----
+void foo(){
+  Debug.Log("我是来测bug的么？")
+}
+----
+
+
+.最近在学习啥呢
+- http://www.scratchapixel.com/[图形学]
+- MongoDB

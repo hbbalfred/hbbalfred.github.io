@@ -1,10 +1,1 @@
-{
-  "meta": {
-    "username": "hbbalfred",
-    "repositoryName": "hbbalfred.github.io",
-    "branch": "master"
-  },
-  "theme": {
-    "name": "Casper"
-  }
-}
+{"meta":{"username":"hbbalfred","repositoryName":"hbbalfred.github.io","branch":"master"},"site":{"title":"hbb's space","description":"什么都想学，什么都没学会。\n有用没用学了再说，时间就这么浪费在学习上了...","googleAnalytics":"UA-69417240-1","url":"https://hbbalfred.github.io"},"socialnetwork":{"email":"hbbalfred@gmail.com"},"theme":{"name":"Casper","url":"//hbbalfred.github.io/themes/Casper"}}

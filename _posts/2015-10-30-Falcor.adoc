@@ -1,0 +1,21 @@
+= 看了下Falcor
+:hp-tags: web
+:falcor: https://netflix.github.io/falcor/starter/what-is-falcor.html[falcor]
+
+看了篇文章说 http://www.infoq.com/cn/news/2015/10/React-Falcor-ES6[web开发的未来]，其中提到了 {falcor}，就顺带了解了下。
+
+其核心的概念是 https://netflix.github.io/falcor/documentation/jsongraph.html[JSON Graph]，如官网介绍，它是用一个json对象描述所有的数据模型，换句话说，一套业务逻辑所需要的数据模型放在一个json对象里定义。
+
+_（此处省去意义分析）_
+
+这么做最大的问题是数据传输，很显然不能每次都传递这个json对象，所以 {falcor} 为此实现了一套可以选择性读写的机制。
+
+_（此处省去对语法糖的评价）_
+
+
+到此感觉 {falcor} 像是一个json版的关系型数据库。
+
+至于异步读写机制，仅仅是统一了本地和远程在读写数据时的方法。
+带来的副作用，是把传统的 rest api 隐藏在 {falcor} 自己的读写机制里了。
+
+确是一个很有意思的实现。

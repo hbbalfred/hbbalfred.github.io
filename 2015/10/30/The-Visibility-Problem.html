@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>可见性问题 - hbb&#x27;s space</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="可见性问题">
+    <meta name="twitter:description" content="">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="可见性问题">
+    <meta property="og:description" content="">
+
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link href="/apple-touch-icon-precomposed.png" rel="apple-touch-icon">
+
+    <link rel="stylesheet" type="text/css" href="//hbbalfred.github.io/themes/uno/assets/css/uno.css?v=1.0.0" />
+
+    <link rel="canonical" href="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html" />
+    
+    <meta property="og:site_name" content="hbb&#x27;s space" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="可见性问题" />
+    <meta property="og:description" content="原文出处 在前一章节里，我们已经解释了什么事可见性问题。为了创建一个逼真的图像，我们需要从给定的观察点来决定一个对象的哪些部分是可见的。问题就是当我们按例去投影一个盒子的所有顶点，并且连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。不管怎么说，真实情况下只有盒子的正面是可见的，其他面应该看不到。 在图形学中，解决可见性问题主要有两个方法：光线追踪和栅格化。我们会快速的解释他们是如何工作的。如今已很难搞清楚哪个方法更古老，只不过在图形学早期，栅格化更流行点。光线追踪比栅格化计算量大（使用内存多）是出了名的，比较下来会慢很多。以前的电脑也不快（内存也..." />
+    <meta property="og:url" content="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html" />
+    <meta property="article:published_time" content="2015-10-29T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-11-03T19:31:52.502Z" />
+    <meta property="article:tag" content="graphic" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="可见性问题" />
+    <meta name="twitter:description" content="原文出处 在前一章节里，我们已经解释了什么事可见性问题。为了创建一个逼真的图像，我们需要从给定的观察点来决定一个对象的哪些部分是可见的。问题就是当我们按例去投影一个盒子的所有顶点，并且连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。不管怎么说，真实情况下只有盒子的正面是可见的，其他面应该看不到。 在图形学中，解决可见性问题主要有两个方法：光线追踪和栅格化。我们会快速的解释他们是如何工作的。如今已很难搞清楚哪个方法更古老，只不过在图形学早期，栅格化更流行点。光线追踪比栅格化计算量大（使用内存多）是出了名的，比较下来会慢很多。以前的电脑也不快（内存也..." />
+    <meta name="twitter:url" content="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "hbb&#x27;s space",
+    "author": {
+        "@type": "Person",
+        "name": "hbb",
+        "image": "https://avatars.githubusercontent.com/u/174926?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://hbbalfred.github.io/"
+    },
+    "headline": "可见性问题",
+    "url": "https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html",
+    "datePublished": "2015-10-29T16:00:00.000Z",
+    "dateModified": "2015-11-03T19:31:52.502Z",
+    "keywords": "graphic",
+    "description": "原文出处 在前一章节里，我们已经解释了什么事可见性问题。为了创建一个逼真的图像，我们需要从给定的观察点来决定一个对象的哪些部分是可见的。问题就是当我们按例去投影一个盒子的所有顶点，并且连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。不管怎么说，真实情况下只有盒子的正面是可见的，其他面应该看不到。 在图形学中，解决可见性问题主要有两个方法：光线追踪和栅格化。我们会快速的解释他们是如何工作的。如今已很难搞清楚哪个方法更古老，只不过在图形学早期，栅格化更流行点。光线追踪比栅格化计算量大（使用内存多）是出了名的，比较下来会慢很多。以前的电脑也不快（内存也..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="hbb&#x27;s space" href="https://hbbalfred.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+
+</head>
+<body class="post-template tag-graphic no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    <header class="panel-cover panel-cover--collapsed " >
+      <div class="panel-main">
+    
+        <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+    
+            <h1 class="panel-cover__title panel-title"><a href="https://hbbalfred.github.io" title="link to homepage for hbb&#x27;s space">hbb&#x27;s space</a></h1>
+            <hr class="panel-cover__divider" />
+            <p class="panel-cover__description">啥都想学，啥都没学会。有用没用的时间就这么浪费在学习上了...</p>
+            <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+            <div class="navigation-wrapper">
+    
+              <nav class="cover-navigation cover-navigation--primary">
+                <ul class="navigation">
+                  <li class="navigation__item"><a href="https://hbbalfred.github.io/#blog" title="link to hbb&#x27;s space blog" class="blog-button">Blog</a></li>
+                </ul>
+              </nav>
+    
+              
+              
+              <nav class="cover-navigation navigation--social">
+                <ul class="navigation">
+              
+              
+              
+              
+                  <!-- Github -->
+                  <li class="navigation__item">
+                    <a href="https://github.com/hbbalfred" title="Github account">
+                      <i class='icon icon-social-github'></i>
+                      <span class="label">Github</span>
+                    </a>
+                  </li>
+                  </li>
+              
+              
+              
+              
+              
+                  <!-- Email -->
+                  <li class="navigation__item">
+                    <a href="mailto:hbbalfred@gmail.com" title="Email hbbalfred@gmail.com">
+                      <i class='icon icon-mail'></i>
+                      <span class="label">Email</span>
+                    </a>
+                  </li>
+              
+                </ul>
+              </nav>
+              
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+        <div class="panel-cover--overlay"></div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            
+
+  <article class="post-container post-container--single">
+
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime="30 Oct 2015" class="post-meta__date date">30 Oct 2015</time> &#8226; <span class="post-meta__tags tags">on <a href="https://hbbalfred.github.io/tag/graphic">graphic</a></span>
+        <span class="post-meta__author author"><img src="https://avatars.githubusercontent.com/u/174926?v=3" alt="profile image for hbb" class="avatar post-meta__avatar" /> by hbb</span>
+      </div>
+      <h1 class="post-title">可见性问题</h1>
+    </header>
+
+    <section class="post tag-graphic">
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="http://www.scratchapixel.com/lessons/3d-basic-rendering/rendering-3d-scene-overview/visibility-problem">原文出处</a></p>
+</div>
+<div class="paragraph">
+<p>在前一章节里，我们已经解释了什么事可见性问题。为了创建一个逼真的图像，我们需要从给定的观察点来决定一个对象的哪些部分是可见的。问题就是当我们按例去投影一个盒子的所有顶点，并且连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。不管怎么说，真实情况下只有盒子的正面是可见的，其他面应该看不到。</p>
+</div>
+<div class="paragraph">
+<p>在图形学中，解决可见性问题主要有两个方法：<strong>光线追踪</strong>和<strong>栅格化</strong>。我们会快速的解释他们是如何工作的。如今已很难搞清楚哪个方法更古老，只不过在图形学早期，栅格化更流行点。光线追踪比栅格化计算量大（使用内存多）是出了名的，比较下来会慢很多。以前的电脑也不快（内存也少），所以渲染图像基本不考虑使用光线追踪，至少在生产环境下如此（比如制作电影）。因此，几乎每个渲染器使用的都是栅格化（光线追踪一般仅限于研究项目）。但是，光线追踪在类似反射、柔和阴影等效果模拟上比栅格化好，原因我们下一章节解释。总的来说，用光线追踪比较容易创建逼真的图像，比起栅格化适用于渲染几何图形，光线追踪更适合模拟真实的着色和光阴效果。我们会在下一章节解释为什么。即时渲染API和显卡通畅使用栅格化，因为速度才是选择算法的决定因素。不过对于光线追踪的说法，80、90年代正确的，在今天就不一定是正确的。现如今电脑非常强大，光线追踪经常用于离线渲染器（至少，两种算法的混合方法已经被实现了）。为什么？还是因为对于模拟类似刺眼的光泽的反射，柔和的阴影等效果，光线追踪是最简单的方法。当速度不再是问题，那么在很多地方都比栅格化来的卓越（让光线追踪有效率的运作仍需要大量的工作）。Pixar的PhotoRealistic RenderMan，是Pixar开发的一个基于栅格化算法的渲染器（该算法被称为REYES，是Renders Everything You Ever Saw【渲染一切所见】的缩写，其构思深远，几乎是最好的可见面判定算法，连显卡的渲染管线都诸多类似REYES），制作过很多早期的电影(玩具总动员、海底总动员、虫虫特工队)。但目前Pixar的渲染器RIS是一个纯粹的光线追踪器。引入光线追踪使得工作室这几年内，极大的推动了写实化以及复杂图像的制作。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">栅格化如何解决可见性问题？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们已经把栅格化和光线追踪的区别清晰的解释过了（阅读上一章节）。让我们回顾一下，栅格化可以看作是，位于几何图形表面的一点P，沿着连接到眼睛的一条直线移动，直到碰到画布表面为止。当然，这条直线是隐藏的，实际上根本不需要去构造它，在此，我们是为了可以直观的去解释投影过程。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/projection3.png" alt="投影过程">
+</div>
+<div class="title">图1：投影过程可以被看成是一个点沿着它和眼睛的连线一直向下移动，当碰到画布所在平面时停止移动。显然我们不必真的去滑动这个点，只是以此解释投影过程。</div>
+</div>
+<div class="paragraph">
+<p>我们需要解决的是可见性问题。换句话说，在场景上可能会有很多点P,P1,P2等等，它们都投影在画布的同一点P'上（画布即是场景）。而在连接到眼睛的同一条直线上的所有点里，只有一个点能被摄影机看到，就是离眼睛最近的那个，参考图2.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/projection2.png" alt="可见点">
+</div>
+<div class="title">图2：场景上多个点可能会投影在场景的同一点上。摄影机能看到的是对齐的店中，离眼睛最近的那个点</div>
+</div>
+<div class="paragraph">
+<p>要解决可见性问题，首先要找出图中P'所在位置的表达式，即图像的像素坐标是什么，P'落在哪里？还记得投影一个点到画布表面，给定另一个点P'的实数坐标么。P'必须落在最终图像给定的像素上。因此，如何通过画布表面上一点P'的表达式，来定义其在最终图像上的位置（像素坐标）？这里涉及一个简单的坐标系变换。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>首先定义的坐标系称为<strong>场景空间</strong>（或图像空间），其原点在画布中心。这个2D坐标系的所有轴都是单位长度（长度为1）。注意x或y轴上的点可以是负数，x轴向左以及向y轴向上即为负。</p>
+</li>
+<li>
+<p>以格子形式定义的图像像素坐标系称为<strong>栅格空间</strong>，其原点通常位于图像的左上角，轴也是单位长度，一个像素为一单位长度。因此，画布在该坐标系中的实际尺寸由图像的垂直（高）和水平（宽）的维度决定（即像素表达式）。</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/screentoraster.png" alt="空间转换">
+</div>
+<div class="title">图3：计算一个画布上的点所处的像素值，需要把点从场景空间转换到NDC空间后，再从NDC空间转换到栅格空间。</div>
+</div>
+<div class="paragraph">
+<p>将点从场景空间转换到栅格空间非常简单。因为在栅格空间中的点P'只会是正数，我们首先把P'归一化。换句话说，使其范围在0,1之间（当点被如此定义时，我们称点被定义在NDC空间中，NDC全称是Normalized Device Coordinates【归一设备空间】）。一旦转换到NDC空间，再把点转换到栅格空间就很简单了。只需乘以图像尺寸，然后四舍五入即可（像素坐标永远是整数）P'坐标的范围取决于场景中画布的尺寸。为了简单起见，假设画布的宽高都只有2个单位长度，也就是说P'在场景中的坐标范围是[-1,1]。以下是把P'坐标从场景空间转换到栅格空间的伪码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-linenums" data-lang="linenums">int width = 64, height = 64; // 以像素为单位的图像尺寸
+Vec3f P = Vec3f(-1, 2, 10);
+Vec2f P_proj;
+P_proj.x = P.x / P.z; // -0.1
+P_proj.y = P.y / P.z; // 0.2
+// 场景空间转换到归一空间
+Vec2f P_proj_nor;
+P_proj_nor.x = (P_proj.x + 1) / 2; // (-0.1 + 1) / 2 = 0.45
+P_proj_nor.y = (1 - P_proj.y ) / 2; // (1 - 0.2) / 2 = 0.4
+// 最终转换到栅格空间
+Vec2i P_proj_raster;
+P_proj_raster.x = (int)(P_proj_nor.x * width);
+P_proj_raster.y = (int)(P_proj_nor.y * height);
+if (P_proj_raster.x == width) P_proj_raster.x = width - 1;
+if (P_proj_raster.y == height) P_proj_raster.y = height - 1;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>代码中有一些东西需要注意。第一就是原点P，投影在场景空间和NDC空间的点，使用的是<code>Vec3f</code>和<code>Vec2f</code>类型，其坐标被定义为实数（浮点数）。然而最终落在栅格空间的点使用的是<code>Vec2i</code>类型，其坐标被定义为整数（图像的像素坐标）。数组在程序中从0开始，因此，在栅格空间中的坐标点永远不会大于图像宽度或者高度减去一。代码（14,15行）对其进行了检测并做了约束。同样，在NDC空间坐标原点位于图像的左下角，但是在栅格空间内原点位于左上角（见图3）。因此，坐标从NDC空间到栅格空间时需要反转。（代码8,9两行对此做了不同的检测）</p>
+</div>
+<div class="paragraph">
+<p>但为何需要如此变换？解决可见性问题，要使用以下方法：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>映射所有在场景上的点。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>对每个映射点，都需要把P'从场景空间转换到栅格空间。</p>
+<div class="literalblock">
+<div class="content">
+<pre>来自读者的问题：“你说，映射场景上所有的点。如何才能找到这些点？”。这个问题非常好。从技术角度讲，我们可以把三角形或者多边形对象划分成很小的集合元素，使其投影到场景上时比不超过一个像素的大小。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>（利用栅格空间内的映射点）找到对应的像素点，把该点到眼睛的直线距离保存在一个特殊的列表中（深度列表）。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>最后，按距离由小到大排序每个像素所维护的列表中所有的点。处理的结果很明显，对于图像上任何像素，可见的点就是列表中的第一个元素。</p>
+<div class="literalblock">
+<div class="content">
+<pre>需要排序列表的原因是，投影的顺序是不固定的。假设在列表顶部插入点，而在投影A点后，投影了一个比A点离眼睛更远的B点，那么此时B点就位于列表顶部了。所以排序是必须的。</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>基于这些的算法被称为<strong>深度排序算法</strong>。<strong>对象深度的顺序（或者对象表面点的顺序）概念是所有栅格化算法的基础</strong>。列举一些当今最有名的算法：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>z-buffering算法。这个算法应该是这种类别里最有名的了。我们之前讲过的REYES算法就实现了z-buffering算法。该算法在技术上非常类似于我们讲述过的对象表面的点，如何投影在场景上以及保存在深度列表中。</p>
+</li>
+<li>
+<p>画家算法</p>
+</li>
+<li>
+<p>Newell算法</p>
+</li>
+<li>
+<p>&#8230;&#8203;(等待补充）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>请记住这些似乎过时的玩意儿，所有的显卡都实现了某种z-buffer算法来生成图像。这些算法（至少是z-buffering）现今还是比较常见的。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>当透明度
+为什么我们需要维持一个点的列表？储存到眼睛最短距离的点就可以不需要这个列表。事实上，还可以做的更好：
+
+* 对图像上每个像素，设置z为无穷大。
+* 对场景上每个点。
+** 投影后计算栅格化坐标。
+** 如果当前点到眼睛的距离小于储存的距离，更新z。
+
+你会发现，这和保存一个列表并排序的结果是一样的。那我们为何不这么做？因为这么做的前提是我们假设场景上所有的点都是完全透明的。一旦碰到半透明的情况会怎么样呢？显然，如果有半透明的点出现在同一个像素上，他们都可能会被看到。对此，就必须保存每个像素上所有的点，然后排序，利用特殊的混合算法（我们会在REYES算法课程里学到）计算出正确的像素值。</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">光线追踪如何解决可见性问题？</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>对于栅格化，投影在场景中的点找到它们各自在图像平面上的位置。我们可以换个角度看这个问题。不再是从点到像素，而是从像素开始转换成图像平面上的一点（取像素的中心点，从栅格空间转换到屏幕空间）。给定P'，然后从眼睛出发追踪一条光线，透过P'一直到场景（默认我们假设P'就是像素中心）。如果发现光线和物体相交，那么得到的交点P，就是该像素的可见点。简单的说，光线追踪解决可见性问题的意思，就是追踪一条从眼睛出发到场景的光线。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/raytracing.png" alt="光线追踪">
+</div>
+<div class="title">图4：对于光线追踪，光线从眼睛直到场景。如果和某个几何体相交，像素值就是该交点处物体的颜色值</div>
+</div>
+<div class="paragraph">
+<p>注意的是，光线追踪和栅格化是相反的。他们基于同样的原则，只是光线追踪是从眼睛到物体，而栅格化是从物体到眼睛。给定图像中任意像素都可以找出可见点（两者的结果是一致的），他们分别解决不同的问题。光线追踪更复杂一点，因为他需要解决光线几何的交点问题。我们有办法找到一条光线和几何图形的交点么？一条光线和一个球体的交点可能容易计算，那么光线和圆锥的交点能找到么？对于任意形状、NURBS、细分表面以及隐式表面呢？可见，光线追踪是一种用来计算光线在场景中可能会碰到的任意几何体的技术（你得渲染器可能已经支持）。</p>
+</div>
+<div class="paragraph">
+<p>好几年来，一大堆研究投入在更有效的计算光线和三角形——最简单的图形的交点上，但也有直接追踪在其他几何体：NURBS，隐式表面等等。不管怎样，一种至此所有几何类型的可行方案，就是在渲染过程开始前，把所有几何体转换成单一一种几何体，之后渲染器只测试光线和一种几何体的相交。因为三角形在大多数时候是最基本的图形，所以所有几何体都先转成三角形网格。也就是说不用实现一个光线对象来和每一种几何体进行相交测试，只需要测试光线和三角形即可。这么做有几大好处：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>第一，像之前提到的，三角形的很多属性使其成为最基本的几何体。三点共面使得三角形是不可分割的（通过连接各个顶点创建更多面，至少会需要4个或者更多顶点），但却很容易的分解出更多的三角形。最终，用数学计算三角形的重心坐标（用于贴图）也很简单而且强大。</p>
+</li>
+<li>
+<p>因为三角形是一个基本几何形状，所以很多研究已经完成了光线和三角形相交的最佳测试方法。什么是最好的相交算法？快速（得到结果所用的操作越少越好），省内存（一些算法由于要存储预先计算的三角形，所以非常吃资源），强大（避免浮点数问题）。</p>
+</li>
+<li>
+<p>从编码考虑，针对一个形状明显要比处理所有几何类型有优势。支持三角形不仅是在大多地方简化了代码，而且同样使得代码设计更好的工作于三角形。这在加速结构中尤其明显。计算交点是非常耗费的，所花的时间随着场景中的几何体增加成线性增长。就算场景中只包含几百个基本几何体，也需要根据光线会不会发生相交来把场景分割一下。这样的策略一般基于加速结构，且节省了大量时间。我们之后将学习加速结构。同样值得注意的是硬件在设计上，已经为光线和三角的相交做了特殊处理，允许在复杂场景中即时使用光线追踪。在未来可见，显卡将原生支持光线和三角的相交测试，使得电子游戏更进一步。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">比较栅格化和光线追踪</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们已经讨论过几次光线追踪和栅格化的不同之处。为什么选择这个而不是那个？正如之前提及，可见性排序，栅格化比光线追踪快。究竟为什么呢？转换几何体方式的栅格化终究需要花一系时间，但投影几何体本身很快速（只需要少数乘法、加法和减法）。相比起来，计算光线和几何体相交所需要很多的指令和更多的消耗。最主要的是光线追踪的渲染时间会随着场景中的内容成线性增长。因为必须要检测光线和场景中所有三角形是否相交。幸运的是这个问题可以利用<strong>加速结构</strong>得以缓解。加速结构背后的想法是，空间可以被分解（比如把一个包含所有几何体的盒子分解成几格，每格描述成盒子的子空间）物体存储在子空间。见示意图5</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/gridaccel.png" alt="加速结构">
+</div>
+<div class="title">图5：加速结构的原则就是分解空间到子领域。光线从一个子领域穿梭到下一个时，我们只需要检测当前子领域里可能会产生相交的几何体，而不是所有几何体。这就节省了极大的消耗</div>
+</div>
+<div class="paragraph">
+<p>如果子空间比物体平均尺寸要大很多，意味着子空间包含了不止一个物体（当然这取决于物体是如何分布的）。我们不再检测场景内所有物体，而是先检测光线是否有相交的子空间（也就是，光线穿过的子空间），如果有，检测光线和该子空间中包含的所有物体是否相交，如果没有，直接跳过所有检测。这样只需要检测场景的一部分，节省很多时间。</p>
+</div>
+<div class="paragraph">
+<p>如果加速结构可以加速光线追踪，那么是不是就比栅格化优越了呢？是也不是。首先它还是很慢，而且使用加速结构会产生一些新的问题。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>首先，构造结构需要花时间，构造好之前渲染器是没法开始工作的。通常这花不了几秒，但如果在即时应用中，几秒已经是非常多了（如果几何体每一帧都会改变的话，那么在每帧渲染前都需要构造加速结构）。</p>
+</li>
+<li>
+<p>其次，会使用大量内存。这取决于场景复杂度，因为相当一部分内存要用于加速结构，所以其它部分可用的就少了，具体来说就是存储的几何体变少了。再说的具体点，光线追踪可渲染的几何体比栅格化要少。</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/gridaccel2.png" alt="不适合加速结构的场景">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>最后，找到一个合适的加速结构非常难。想象一下，场景中有一个三角形位于场景的一侧，而另一侧的一个子空间中则拥挤了一大堆三角形。这样，划分的子空间中就有很多是空着的，但仍需要对他们进行光线的相交测试。在频繁测试中每节省一次都是有必要的，所以类似这样的场景采用加速结构就不是一个好的选择。可见，加速结构的有效性非常依赖于场景，以及物体的散落方式：物体是否过小过大，是否混合了很大很小的物体，物体是否能独立于一个子空间还是会占据多个子空间？</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>有着很多层次不齐的加速结构，总有一些比较出众。之后还会学到。</p>
+</div>
+<div class="paragraph">
+<p>读到这儿，你可能觉得光线追踪有着各种问题。实际上，光线追踪流行是有原因的。首先它的价值，非常容易实现。第一节课里几百行就写了一个很简单的光线追踪器。当然，你会说写个基于栅格化算法的渲染器也不用很多编码，但是，光线追踪的概念更容易去编码，因为它生成3d图像的过程更直观。不过更重要的是，光线追踪可以直接用来，计算一些写实的图像效果，例如模拟反射、软阴影，而这些用栅格化模拟会非常的困难。为了了解其中缘故，我们会在之后章节详细介绍阴影和光照。</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+栅格化够速度，但在支持复杂视觉效果上要动脑子。光线追踪支持复杂视觉效果，但在速度上要动脑子
+</blockquote>
+<div class="attribution">
+&#8212; David Luebke - NVIDIA
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>栅格化让他快简单，让他好看难。光线追踪，让他好看简单，让他快难。</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>这章节我们只是了解了使用光线追踪和栅格化两种不同的方法解决可见性问题。栅格化通过显卡渲染3d场景。并且比光线追踪快。利用加速结构可以加快光线追踪，但也有一系列问题：很那找到合适的加速结构，依赖于场景的配置（基本几何体的数量，它们的尺寸和分布情况）同样还需要额外的内存和时间来构造。</p>
+</div>
+<div class="paragraph">
+<p>这种时候，光线追踪比不上栅格化。然而，光线追踪在模拟光影效果时要比栅格化好。好的意思是，实现起来更直接，而不是说栅格化没法做到，只是说会需要额外的工作。我们强调是因为有种普遍的误解，好像没法模拟反射之类的效果，只有光线追踪可以。这是不对的。还有种想法是认为可以用混合模式，栅格化用于可见面剔除步骤，光线追踪用来着色，然后渲染，但这需要在一个框架内实现两个系统。同时因为，光线追踪比较容易模拟一些东西，大多数人更喜欢用它解决可见性问题。</p>
+</div>
+</div>
+</div>
+    </section>
+
+  </article>
+
+
+
+
+            <footer class="footer">
+                <span class="footer__copyright">&copy; 2015. All rights reserved.</span>
+                <span class="footer__copyright"><a href="http://uno.daleanthony.com" title="link to page for Uno Ghost theme">Uno theme</a> by <a href="http://daleanthony.com" title="link to website for Dale-Anthony">Dale-Anthony</a></span>
+                <span class="footer__copyright">Proudly published with <a href="http://hubpress.io" title="link to Hubpress website">Hubpress</a></span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/uno/assets/js/main.js?v=1.0.0"></script>
+    
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-69417240-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

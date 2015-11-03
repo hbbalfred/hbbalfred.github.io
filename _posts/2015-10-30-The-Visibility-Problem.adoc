@@ -1,5 +1,6 @@
 = 可见性问题
 :hp-tags: graphic
+:hp-alt-title: The Visibility Problem
 
 http://www.scratchapixel.com/lessons/3d-basic-rendering/rendering-3d-scene-overview/visibility-problem[原文出处]
 

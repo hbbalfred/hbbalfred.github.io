@@ -1,0 +1,25 @@
+= 光线模拟器
+:hp-tags: graphic
+:hp-alt-title: a light simulator
+
+上一章节我们最终提到光线追踪在模拟着色和灯光效果（例如反射、柔和阴影等）上比栅格化更好。没有这些效果，会使图像缺乏真实感。在深入此话题前，先来看看一些真实世界中的图像，以便更好的理解这些效果。
+
+== 反射
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/reflection.png[alt="完美镜面"]
+
+当光线和一个完美的镜面所接触时，所得到的反射光角度是可预知的。可以通过反射法则计算出新的方向。该法则类似从墙面弹回的网球，一条光线在接触到表面后会改变方向，光线的反射方向是入射方向在入射点相对于法线的反射。更普遍的说法是，反射光线总是射离材质表面，且反射角等于入射角。如下图所示，法线和入射向量所组成的角度，等于法线和出射向量所组成的角度。注意例图中以水面作为反射表面，而实际上水和玻璃比起金属在反射上的表现要差很多。
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/mirror.svg[alt="反射"]
+
+
+== 透明度
+
+光线在碰到透明物体（比如玻璃橱柜）时会发生反射和折射。
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/transparency.png[alt="透明物体"]
+
+传输作为折射中常用的术语，与其字面意思大相径庭。在此传输所指的是，一小部分入射光线进入物体的一边，而从另一边离开（这也就是为什么我们能够透过窗户看到东西）。不管怎样，在光线接触到透明物体表面的那一瞬间，方向变了，所以我们称为折射。当光线从一个透明媒介比如空气，进入另一个比如水或玻璃时，会发生弯曲效果（不管是从空气到水，还是水到空气，光线都会发生弯曲）。连同反射，折射方向可以使用**Snell法则**进行计算。多少光被反射、多少被折射则由**Fresnel等式**给定。在渲染中这两个公式非常重要。下方的图，显示了一条光线进入一块玻璃产生了折射，在离开玻璃后再次产生折射，直到最后碰到下方的表面。如果表面是一个物体，我们就可以透过玻璃看到它。
+
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/transparent-raygraph.png[alt="折射"]

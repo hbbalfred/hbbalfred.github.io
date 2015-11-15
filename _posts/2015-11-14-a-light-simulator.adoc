@@ -12,7 +12,6 @@ image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/ref
 
 image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/mirror.svg[alt="反射"]
 
-
 == 透明度
 
 光线在碰到透明物体（比如玻璃橱柜）时会发生反射和折射。
@@ -21,5 +20,38 @@ image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/tra
 
 传输作为折射中常用的术语，与其字面意思大相径庭。在此传输所指的是，一小部分入射光线进入物体的一边，而从另一边离开（这也就是为什么我们能够透过窗户看到东西）。不管怎样，在光线接触到透明物体表面的那一瞬间，方向变了，所以我们称为折射。当光线从一个透明媒介比如空气，进入另一个比如水或玻璃时，会发生弯曲效果（不管是从空气到水，还是水到空气，光线都会发生弯曲）。连同反射，折射方向可以使用**Snell法则**进行计算。多少光被反射、多少被折射则由**Fresnel等式**给定。在渲染中这两个公式非常重要。下方的图，显示了一条光线进入一块玻璃产生了折射，在离开玻璃后再次产生折射，直到最后碰到下方的表面。如果表面是一个物体，我们就可以透过玻璃看到它。
 
-
 image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/transparent-raygraph.png[alt="折射"]
+
+== 次表面散射
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/subsurface.png[alt="次表面散射"]
+
+次表面散射是半透明在技术上的称谓。半透明表面是既不完全透明也不完全不透明的表面，但实际上，半透明物体和透明度没什么关系。半透明效果在从背后观察蜡、或者由玉或大理石组成的小东西，或者一些比较薄的组织（比如皮肤，树叶）的时候特别明显。半透明就是光线在穿过材质的时候，方向发生了改变，以至于光线离开物体的点和入射点不在同一个方向上。次表面散射非常难以模拟。
+
+== 间接漫反射
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/indirectdiffuse.png[alt="间接漫反射"]
+
+如上图所示，一些装饰用的物体表面，不朝向任何光线。它们既不朝向太远，也不朝向天空（天空可以视作一个超大光源），但它们也不是全黑的。这是怎么回事？这是因为太阳光直接照射到地面后，反弹回环境中的一些光线最终照射到了这部分接受不到阳光的物体。因为表面接受的是间接来自光源的光线，所以称为间接光。术语中的漫反射，意味着反弹的光线是漫反射的。
+
+== 间接光镜或焦散
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/caustics.png[alt="间接光镜或焦散"]
+
+漫反射物体的反射光会照射其周围部分，类似的反射物体也可以间接的改变环境中的光线照亮其它物体。透镜或水面的波纹可以将光线聚焦成一条直线或者某种样式，这我们称为焦散（）。当光线在迪斯科的玻璃球中发生反射，在夏天的窗户上发生反射，或者强光射在玻璃上时，容易产生焦散。
+
+== 软阴影
+
+image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/softshadows.png[alt="软阴影"]
+
+迄今为止我们讲述的大多数效果都和物体本身材质有关。而软阴影只是一个几何问题，和物体以及光源的形状、大小以及所在空间的位置有关。
+
+大家不用为此好奇，我们之后会持续学习这些。这篇教程的关键点，是观察一些真实世界的图片，分析它们的光影效果，之后我们会重建它们。
+
+> 记住这篇文章所讲的，漫反射在所有视角方向上显示的亮度是相等的，而镜面反射在视角方向的亮度是最亮的（如果移动镜子，会发现到图像的改变）。我们说漫反射的交互和视角无关的，而镜面交互是依赖视角的
+
+== 光线传输和着色：两个相关但又不同的问题
+
+快速浏览这些效果的原因是需要了解两件事：
+
+

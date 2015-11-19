@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>光传输</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//hbbalfred.github.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//hbbalfred.github.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://hbbalfred.github.io/2015/11/20/light-transport.html" />
+    
+    <meta property="og:site_name" content="hbb&#x27;s space" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="光传输" />
+    <meta property="og:description" content="光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本..." />
+    <meta property="og:url" content="https://hbbalfred.github.io/2015/11/20/light-transport.html" />
+    <meta property="article:published_time" content="2015-11-19T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-11-19T17:26:55.417Z" />
+    <meta property="article:tag" content="graphic" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="光传输" />
+    <meta name="twitter:description" content="光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本..." />
+    <meta name="twitter:url" content="https://hbbalfred.github.io/2015/11/20/light-transport.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "hbb&#x27;s space",
+    "author": {
+        "@type": "Person",
+        "name": "hbb",
+        "image": "https://avatars.githubusercontent.com/u/174926?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://hbbalfred.github.io/"
+    },
+    "headline": "光传输",
+    "url": "https://hbbalfred.github.io/2015/11/20/light-transport.html",
+    "datePublished": "2015-11-19T16:00:00.000Z",
+    "dateModified": "2015-11-19T17:26:55.417Z",
+    "keywords": "graphic",
+    "description": "光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="hbb&#x27;s space" href="https://hbbalfred.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-graphic">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://hbbalfred.github.io">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://hbbalfred.github.io/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-graphic">
+
+        <header class="post-header">
+            <h1 class="post-title">光传输</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-11-20">20 November 2015</time>  on <a href="https://hbbalfred.github.io/tag/graphic">graphic</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>光传输既不简单也不复杂，反而常常被误解。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。</p>
+</div>
+<div class="paragraph">
+<p>想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本的，那就是以L开头，以E结尾。最短的路径是LE，这种情况发生在直接看光源时。光线会从光源直接射入眼睛（没有任何弹射）。只要光线发生一次弹射，那么路径不是LSE就是LDE，于是得到了一个直接光照（直接镜面或者直接漫射）。水面反射的太阳光就是直接镜面的一个例子。如果看到湖中反射的大山，那路径很可能是LDSE（假设大山是漫反射表面），这属于间接光照。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/lightpath.png" alt="光路径"></span>
+<sup>图1：光的路径</sup></p>
+</div>
+<div class="paragraph">
+<p>研究者Paul Heckbert在1990年发表的书名为《自适应光能传递纹理的双向光线追踪》里介绍了路径表示法。用正则表达式简化描述光的路径并不少见。举例任意漫射表面或镜面的反射组合可以写成：<code>L(D|S)*E</code>。在Regex（正则表达式的缩写）里，<code>(a|b)*</code>符号表示所有字符串的集合只有"a"和"b"元素，以及空字符串：{ɛ, "a", "b", "aa", "ab", "ba", "bb", "aaa", &#8230;&#8203;}。</p>
+</div>
+<div class="paragraph">
+<p>基于这一点，可能会想，“这样虽然不错，但是怎么和渲染联系起来呢？”正如一直提到的，在真实世界中，光从光源到眼睛，但真正达到眼睛的只有一少部分光线。因此，模拟光的路径并非从光源到眼睛，一个更有效的方法是从眼睛，往回走到光源。</p>
+</div>
+<div class="paragraph">
+<p>（待续）</p>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/174926?v=3)"><span class="hidden">hbb's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">hbb</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">shanghai</span>
+                    <span class="author-link icon-link"><a href="http://hbbalfred.github.io/">http://hbbalfred.github.io/</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=%E5%85%89%E4%BC%A0%E8%BE%93&amp;url=https://hbbalfred.github.io/2015/11/20/light-transport.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://hbbalfred.github.io/2015/11/20/light-transport.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://hbbalfred.github.io/2015/11/20/light-transport.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://hbbalfred.github.io">hbb&#x27;s space</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-69417240-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

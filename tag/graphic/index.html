@@ -48,16 +48,16 @@
     
     <article class="post tag-graphic">
         <header class="post-header">
-            <h2 class="post-title"><a href="https://hbbalfred.github.io/2015/11/14/a-light-simulator.html">光线模拟器</a></h2>
+            <h2 class="post-title"><a href="https://hbbalfred.github.io/2015/11/20/light-transport.html">光传输</a></h2>
         </header>
         <section class="post-excerpt">
-            <p>原文出处 上一章节我们最终提到光线追踪在模拟着色和灯光效果（例如反射、柔和阴影等）上比栅格化更好。没有这些效果，会使图像缺乏真实感。在深入此话题前，先来看看一些真实世界中的图像，以便更好的理解这些效果。 反射 当光线和一个完美的镜面所接触时，所得到的反射光角度是可预知的。可以通过反射法则计算出新的方向。该法则类似从墙面弹回的网球，一条光线在接触到表面后会改变方 <a class="read-more" href="https://hbbalfred.github.io/2015/11/14/a-light-simulator.html">&raquo;</a></p>
+            <p>光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示 <a class="read-more" href="https://hbbalfred.github.io/2015/11/20/light-transport.html">&raquo;</a></p>
         </section>
         <footer class="post-meta">
             
             
              on <a href="https://hbbalfred.github.io/tag/graphic">graphic</a>
-            <time class="post-date" datetime="2015-11-14">14 November 2015</time>
+            <time class="post-date" datetime="2015-11-20">20 November 2015</time>
         </footer>
     </article>
     <article class="post tag-graphic">
@@ -65,7 +65,7 @@
             <h2 class="post-title"><a href="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html">可见性问题</a></h2>
         </header>
         <section class="post-excerpt">
-            <p>原文出处 在前一章节里，我们已经解释了什么是可见性问题。为了创建逼真的图像，我们需要从给定的观察点来决定一个物体的哪些部分是可见的。举例，当我们投影一个盒子的所有顶点，连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。然而真实情况下只有盒子的正面是可见的，其它面应该看不到。 在图形学中，解决可见性问题主要有两个方法：光线追踪和栅格化。我们会快速的解释他们是 <a class="read-more" href="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html">&raquo;</a></p>
+            <p>原文出处 在前一章节里，我们已经解释了什么事可见性问题。为了创建一个逼真的图像，我们需要从给定的观察点来决定一个对象的哪些部分是可见的。问题就是当我们按例去投影一个盒子的所有顶点，并且连接所有投影点绘制成盒子边，则盒子的所有面都是可见的。不管怎么说，真实情况下只有盒子的正面是可见的，其他面应该看不到。 在图形学中，解决可见性问题主要有两个方法：光线追踪和栅格化 <a class="read-more" href="https://hbbalfred.github.io/2015/10/30/The-Visibility-Problem.html">&raquo;</a></p>
         </section>
         <footer class="post-meta">
             

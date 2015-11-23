@@ -23,7 +23,7 @@
     <meta property="og:description" content="光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本..." />
     <meta property="og:url" content="https://hbbalfred.github.io/2015/11/20/light-transport.html" />
     <meta property="article:published_time" content="2015-11-19T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-11-23T16:26:08.269Z" />
+    <meta property="article:modified_time" content="2015-11-23T16:30:31.021Z" />
     <meta property="article:tag" content="graphic" />
     
     <meta name="twitter:card" content="summary" />
@@ -46,7 +46,7 @@
     "headline": "光传输",
     "url": "https://hbbalfred.github.io/2015/11/20/light-transport.html",
     "datePublished": "2015-11-19T16:00:00.000Z",
-    "dateModified": "2015-11-23T16:26:08.269Z",
+    "dateModified": "2015-11-23T16:30:31.021Z",
     "keywords": "graphic",
     "description": "光传输既不简单也不复杂，反而常常被误解。 在一个经典场景中，光在到达眼睛之前会在物体表面弹来弹去。正如前一章节所说，光反射的方向取决于材质类型（是否是漫反射，还是镜面反射，或者其它）。因此，光的路径是由光在到达眼睛的这条路上，和光线不断交互的材质所决定的。 想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本..."
 }
@@ -94,7 +94,8 @@
 <p>想象从光源射出一束光线，经过漫反射表面之后，经过镜子，再经过漫反射表面，最后到达眼睛。用L表示光，D表示漫反射表面，S表示镜面（镜子可以看作是理想的镜面，其表面粗糙度为0），E表示眼睛，在本例中光的路径就是LDSDE。当然，你还可以假设任何组合作为路径，甚至路径中包含无限的D或者S，但有一点是最基本的，那就是以L开头，以E结尾。最短的路径是LE，这种情况发生在直接看光源时。光线会从光源直接射入眼睛（没有任何弹射）。只要光线发生一次弹射，那么路径不是LSE就是LDE，于是得到了一个直接光照（直接镜面或者直接漫射）。水面反射的太阳光就是直接镜面的一个例子。如果看到湖中反射的大山，那路径很可能是LDSE（假设大山是漫反射表面），这属于间接光照。</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/lightpath.png" alt="光路径" title="光的路径"></span></p>
+<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/lightpath.png" alt="光路径"></span>
+<sup>图1：光的路径</sup></p>
 </div>
 <div class="paragraph">
 <p>研究者Paul Heckbert在1990年发表的书名为《自适应光能传递纹理的双向光线追踪》里介绍了路径表示法。用正则表达式简化描述光的路径并不少见。举例任意漫射表面或镜面的反射组合可以写成：<code>L(D|S)*E</code>。在Regex（正则表达式的缩写）里，<code>(a|b)*</code>符号表示所有字符串的集合只有"a"和"b"元素，以及空字符串：{ɛ, "a", "b", "aa", "ab", "ba", "bb", "aaa", &#8230;&#8203;}。</p>
@@ -137,16 +138,19 @@
 </li>
 <li>
 <p>使用二次射线方向作为视角方向，测量从表面到点P实际反射了多少光。</p>
+</li>
+</ul>
+</div>
 <div class="literalblock">
 <div class="content">
 <pre>记住镜面反射是视角依赖的：镜面表面反射多少光，取决于看的角度。漫反射不是视角依赖的：漫反射表面反射多少光和看的角度无关。所以除了漫反射，一个表面反射的光在所有方向上是不相等的。</pre>
 </div>
 </div>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>计算二次射线和表面间，达到交点P的光的总量，和计算到达点P的光没有区别。计算到点P的光，取决于表面属性，通常由<strong>着色器</strong>完成。关于着色器我们下一章再说。</p>
+</div>
+<div class="paragraph">
+<p>（待续）</p>
 </div>
         </section>
 

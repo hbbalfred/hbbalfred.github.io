@@ -37,10 +37,12 @@ image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/sha
 image:http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/reflection2.png[alt="反射光"]
 
 [listing]
+....
 总结一下
-模拟光物交互太难（微观或者原子层面），需要另辟蹊径。
-* 光反射的量和视角方向ωv有关。
-* 给定了ωv的情况下，光反射的量取决于入射光ωi。
+- 模拟光物交互太难（微观或者原子层面），需要另辟蹊径。
+- 光反射的量和视角方向ωv有关。
+- 给定了ωv的情况下，光反射的量取决于入射光ωi。
+....
 
 *着色器，你可以看作是渲染过程的一部分，它负责计算光从表面反射到眼睛（或者场景中其它表面）的量。*这至少和两个变量有关：入射光方向，视角方向。入射光和物体本身无关，而反射光取决于物体类型：漫反射表面，还是镜面表面？
 

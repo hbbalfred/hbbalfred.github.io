@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>着色</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//hbbalfred.github.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//hbbalfred.github.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://hbbalfred.github.io/2015/12/15/shading.html" />
+    
+    <meta property="og:site_name" content="hbb&#x27;s space" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="着色" />
+    <meta property="og:description" content="现实生活中所有东西和光接触后产生的结果，不能都用光线传输来模拟，其难负重任，这时着色器粉墨登场。 要显示一个物体需要计算对象表面的每一个点的颜色和亮度。两者有着很紧密的关系。物体的亮度是指有多少光落在物体表面，物体颜色的亮度和色调、饱和度有关。如果两个颜色相同的物体在同样光线条件下，一个比另一个看起来暗，那么很显然，这不是哪个物理表面光线落的多少的问题，而是哪个物体反射光线到环境中更多的问题。颜色的亮度是不同的，在图形学中，一个物体的颜色被称为albedo。 注意一个物体反射的光不可能比接受的多（除非自身就是个光源）。物体颜色一般是通过计算入射光（白色..." />
+    <meta property="og:url" content="https://hbbalfred.github.io/2015/12/15/shading.html" />
+    <meta property="article:published_time" content="2015-12-14T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-12-15T16:00:55.203Z" />
+    <meta property="article:tag" content="graphic" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="着色" />
+    <meta name="twitter:description" content="现实生活中所有东西和光接触后产生的结果，不能都用光线传输来模拟，其难负重任，这时着色器粉墨登场。 要显示一个物体需要计算对象表面的每一个点的颜色和亮度。两者有着很紧密的关系。物体的亮度是指有多少光落在物体表面，物体颜色的亮度和色调、饱和度有关。如果两个颜色相同的物体在同样光线条件下，一个比另一个看起来暗，那么很显然，这不是哪个物理表面光线落的多少的问题，而是哪个物体反射光线到环境中更多的问题。颜色的亮度是不同的，在图形学中，一个物体的颜色被称为albedo。 注意一个物体反射的光不可能比接受的多（除非自身就是个光源）。物体颜色一般是通过计算入射光（白色..." />
+    <meta name="twitter:url" content="https://hbbalfred.github.io/2015/12/15/shading.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "hbb&#x27;s space",
+    "author": {
+        "@type": "Person",
+        "name": "hbb",
+        "image": "https://avatars.githubusercontent.com/u/174926?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://hbbalfred.github.io/"
+    },
+    "headline": "着色",
+    "url": "https://hbbalfred.github.io/2015/12/15/shading.html",
+    "datePublished": "2015-12-14T16:00:00.000Z",
+    "dateModified": "2015-12-15T16:00:55.203Z",
+    "keywords": "graphic",
+    "description": "现实生活中所有东西和光接触后产生的结果，不能都用光线传输来模拟，其难负重任，这时着色器粉墨登场。 要显示一个物体需要计算对象表面的每一个点的颜色和亮度。两者有着很紧密的关系。物体的亮度是指有多少光落在物体表面，物体颜色的亮度和色调、饱和度有关。如果两个颜色相同的物体在同样光线条件下，一个比另一个看起来暗，那么很显然，这不是哪个物理表面光线落的多少的问题，而是哪个物体反射光线到环境中更多的问题。颜色的亮度是不同的，在图形学中，一个物体的颜色被称为albedo。 注意一个物体反射的光不可能比接受的多（除非自身就是个光源）。物体颜色一般是通过计算入射光（白色..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="hbb&#x27;s space" href="https://hbbalfred.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-graphic">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://hbbalfred.github.io">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://hbbalfred.github.io/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-graphic">
+
+        <header class="post-header">
+            <h1 class="post-title">着色</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-12-15">15 December 2015</time>  on <a href="https://hbbalfred.github.io/tag/graphic">graphic</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="paragraph">
+<p>现实生活中所有东西和光接触后产生的结果，不能都用光线传输来模拟，其难负重任，这时着色器粉墨登场。</p>
+</div>
+<div class="paragraph">
+<p>要显示一个物体需要计算对象表面的每一个点的颜色和亮度。两者有着很紧密的关系。物体的亮度是指有多少光落在物体表面，物体颜色的亮度和色调、饱和度有关。如果两个颜色相同的物体在同样光线条件下，一个比另一个看起来暗，那么很显然，这不是哪个物理表面光线落的多少的问题，而是哪个物体反射光线到环境中更多的问题。颜色的亮度是不同的，在图形学中，一个物体的颜色被称为<strong>albedo</strong>。</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/color-brightness.png" alt="颜色亮度"></span></p>
+</div>
+<div class="paragraph">
+<p>注意一个物体反射的光不可能比接受的多（除非自身就是个光源）。物体颜色一般是通过计算入射光（白色）的反射比例得出的。因为反射出来的光小于接受的光，比值永远小于1。这就是为啥物体的颜色定义在0到1之间，如果是RGB的话就是0到255之间。举例，当比值或颜色或albedo（一回事儿）是0.18，意思就是物体把所接受到的光的18%反射到了环境中。</p>
+</div>
+<div class="paragraph">
+<p>如果一个物体表面的入射光的能量是1000，物体的颜色是0.5，那么眼睛看到的就是反射出来的500。（注意从物理角度看，这么说是错的，只是在学习着色时，这样解释比较直观）。</p>
+</div>
+<div class="paragraph">
+<p>为了计算某一点颜色，需要知道两件事：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>该点处落了多少光。</p>
+</li>
+<li>
+<p>该点的观察角度反射出多少光。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>不要忘了，对于一个光泽表面，光反射的量和观察角度有关。</p>
+</div>
+<div class="paragraph">
+<p>假设物体颜色已知，求一，有多少光到达点P？二，从点P到眼睛的方向上反射出多少光？</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/shading1.png" alt="着色"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>第一个问题就是计算光线传输（直接光照和间接光照），着色的作用就是明确了光线的选择（只在乎视角方向的光线）。</p>
+</li>
+<li>
+<p>第二个问题比较复杂，接下来慢慢说。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>首先，从表面反射回环境中的光线和物体材质有着非常复杂的交互。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>这些交互一般很难模拟。</p>
+</li>
+<li>
+<p>光反射的量取决于视角方向。除了完美的漫反射表面以外，入射光在每个方向上的反射不是完全相等的。而现实中，绝大部分物体都是漫反射和镜面反射的混合。</p>
+</li>
+<li>
+<p>光在视角方向上反射的量还取决于入射光的方向。如图3，入射角和反射角都相等，但视角不同。上方图反射光正好进入眼睛，而下方的图则不是，眼睛就看不到了。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="http://www.scratchapixel.com/images/upload/rendering-3d-scene-overview/reflection2.png" alt="反射光"></span></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>总结一下
+模拟光物交互太难（微观或者原子层面），需要另辟蹊径。
+* 光反射的量和视角方向ωv有关。
+* 给定了ωv的情况下，光反射的量取决于入射光ωi。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>着色器，你可以看作是渲染过程的一部分，它负责计算光从表面反射到眼睛（或者场景中其它表面）的量。</strong>这至少和两个变量有关：入射光方向，视角方向。入射光和物体本身无关，而反射光取决于物体类型：漫反射表面，还是镜面表面？</p>
+</div>
+<div class="paragraph">
+<p>收集抵达P点的光线是一个光线传输问题，不过到此为止，我们都算作是<strong>着色器</strong>。可以把一个着色器当作是程序中的程序，把入射光方向和视角方向看作输入，把这些方向上，表面将反射的光作为输出。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>`反射光比例 = shader(ωi,ωo)`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如此复杂的光物交互可以用一个很简单的数学公式来模拟：</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>`ωr=ωi−2(N.ωi)N`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>白话就是，反射方向等于入射方向减去，2倍的法线点乘入射方向再乘以法线。记住，ωr=ωo时，反射率为1（图3上），否则为0（图3下）。</p>
+</div>
+<div class="paragraph">
+<p>其实这个公式就是完全镜面反射，这个例子在实际过程中根本不会用到。只是用来了解光在难以模拟的时候是如何用数学模型来计算的。这也就是着色器真正的作用：将复杂的光物交互用数学模型代替，虽然不是非常精确或者不符合物理现象，但确是能得到有意义的近似结果。研究着色就是开发新的数学模型，这个本身难度就很高，而且不同的材质影响不同，需要不同的模型，比如为棉花开发一种模型，为丝绸要开发另一种模型。</p>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/174926?v=3)"><span class="hidden">hbb's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">hbb</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">shanghai</span>
+                    <span class="author-link icon-link"><a href="http://hbbalfred.github.io/">http://hbbalfred.github.io/</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=%E7%9D%80%E8%89%B2&amp;url=https://hbbalfred.github.io/2015/12/15/shading.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://hbbalfred.github.io/2015/12/15/shading.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://hbbalfred.github.io/2015/12/15/shading.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://hbbalfred.github.io">hbb&#x27;s space</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-69417240-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

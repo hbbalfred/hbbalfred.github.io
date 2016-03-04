@@ -1,0 +1,18 @@
+= Unity发包大小问题
+:hp-tags: unity
+:hp-alt-title: unity build package
+
+问题是出在，发布成Android的APK，大小在150M左右之后，原封不动切换到iOS平台，然后Build成XCode工程，再在XCode里Build APP，一下子2G...小心脏有点受不了。
+
+经过一番踏坑，才发现原来很多基础概念没搞清楚。
+
+首先，Android APK和iOS APP就不是一回事儿，iOS APP其实是安装在设备上的文件，在安装到设备上之前，会通过iTune压缩成.ipa文件，这个才所谓iOS的安装包，只不过不是越狱机没法随心所欲安装罢了。
+
+而ipa和apk类似，都是一个zip压缩包。所以当把2G左右的app，通过iTune打包成ipa后，ipa的大小是160M，这样心里就好受多了。
+为了进一步证明，把APK unzip解压一下，展开的文件大小果然是1.9G左右。
+
+https://developer.apple.com/library/ios/qa/qa1795/_index.html
+
+可是，好奇的我又心里不爽了，为啥APK安装在手机上后，也没有2G啊...那这就是系统问题咯。iOS在下载安装后文件是全展开的，比如可以通过fopen直接读取资源文件数据，而Android下的资源其实是一个个压缩文件，要访问资源只能通过AssetsManager了。所以到此，系统层面的事儿我就不继续深入了。
+
+接下来就是优化资源的事情了。这个有空再说。

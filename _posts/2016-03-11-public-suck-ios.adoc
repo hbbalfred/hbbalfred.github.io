@@ -1,0 +1,16 @@
+= 发布iOS那点儿坑
+:hp-tags: ios
+:hp-alt-title: public suck ios
+
+
+从常识说起吧，发布iOS得有台Mac...Mac上要装了XCode，并且要注意XCode版本，不能落后与要发布的iOS SDK。一个XCode到现在v7.2版本，已经是4.4G了，所以用错了再更新是很痛苦的。
+
+https://developer.apple.com/xcode/download/[可以从这里直接下载，用不着等烦人的App Store]
+
+之后如果要装模拟器，还得再下模拟器（也要快2G了），不过下模拟器有个小技巧， http://stackoverflow.com/questions/29058229/download-xcode-simulator-directly[不用在XCode里下，可以直接下]。确实能快不少...
+
+接着准备好开发者帐号。
+
+然后在XCode里Archive好后，碰到Validate过不去的， https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide/Chapters/UploadingBinariesforanApp.html[可以使用Application Loader]
+
+在验证环节出错的，凡是关于App构建(Build)、证书(Certificates)、档案(Profile)那一股脑破事， https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html[一定要认真看帮助]

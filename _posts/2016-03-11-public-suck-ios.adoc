@@ -14,3 +14,5 @@ https://developer.apple.com/xcode/download/[可以从这里直接下载，用不
 然后在XCode里Archive好后，碰到Validate过不去的， https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide/Chapters/UploadingBinariesforanApp.html[可以使用Application Loader]
 
 在验证环节出错的，凡是关于App构建(Build)、证书(Certificates)、档案(Profile)那一股脑破事， https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingCertificates/MaintainingCertificates.html[一定要认真看帮助]
+
+http://www.jianshu.com/p/21ebca8cadf6[ios开发证书、描述文件、Bundle ID的关系]

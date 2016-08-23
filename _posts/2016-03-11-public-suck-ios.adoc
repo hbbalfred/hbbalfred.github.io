@@ -29,7 +29,4 @@ http://blog.csdn.net/huutu/article/details/43986079[IL2CPP的坑，瞎JB优化]
 
 **System.ExecutionEngineException: Attempting to call method 'System.Reflection.MonoProperty::GetterAdapterFrame' for which no ahead of time (AOT) code was generated.**
 
-http://forum.unity3d.com/threads/unity-5-0-3f2-il2cpp-problem-attempting-to-call-method-system-reflection-monoproperty-getteradapt.332335/[AOT对反射GetProperty().GetValue()支持不好]
-
-解决方法：
-http://forum.unity3d.com/threads/118515-HOTween-a-fast-and-powerful-Unity-tween-engine/page15?p=891614&viewfull=1#post891614[用GetProperty().GetGetMethod().Invoke()代替]
+http://forum.unity3d.com/threads/118515-HOTween-a-fast-and-powerful-Unity-tween-engine/page15?p=891614&viewfull=1#post891614[AOT对反射GetProperty().GetValue()支持不好，用GetProperty().GetGetMethod().Invoke()代替即可]

@@ -23,7 +23,7 @@
     <meta property="og:description" content="从常识说起吧，发布iOS得有台Mac&amp;#8230;&amp;#8203;Mac上要装了XCode，并且要注意XCode版本，不能落后与要发布的iOS SDK。一个XCode到现在v7.2版本，已经是4.4G了，所以用错了再更新是很痛苦的。 可以从这里直接下载，用不着等烦人的App Store 之后如果要装模拟器，还得再下模拟器（也要快2G了），不过下模拟器有个小技巧， 不用在XCode里下，可以直接下。确实能快不少&amp;#8230;&amp;#8203; 接着准备好开发者帐号。 然后在XCode里Archive好后，碰到Validate过不去的， 可以使用Applicat..." />
     <meta property="og:url" content="https://hbbalfred.github.io/2016/03/11/public-suck-ios.html" />
     <meta property="article:published_time" content="2016-03-10T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-05-17T11:10:28.226Z" />
+    <meta property="article:modified_time" content="2016-08-23T10:21:20.616Z" />
     <meta property="article:tag" content="ios" />
     
     <meta name="twitter:card" content="summary" />
@@ -46,7 +46,7 @@
     "headline": "发布iOS那点儿坑",
     "url": "https://hbbalfred.github.io/2016/03/11/public-suck-ios.html",
     "datePublished": "2016-03-10T16:00:00.000Z",
-    "dateModified": "2016-05-17T11:10:28.226Z",
+    "dateModified": "2016-08-23T10:21:20.616Z",
     "keywords": "ios",
     "description": "从常识说起吧，发布iOS得有台Mac&amp;#8230;&amp;#8203;Mac上要装了XCode，并且要注意XCode版本，不能落后与要发布的iOS SDK。一个XCode到现在v7.2版本，已经是4.4G了，所以用错了再更新是很痛苦的。 可以从这里直接下载，用不着等烦人的App Store 之后如果要装模拟器，还得再下模拟器（也要快2G了），不过下模拟器有个小技巧， 不用在XCode里下，可以直接下。确实能快不少&amp;#8230;&amp;#8203; 接着准备好开发者帐号。 然后在XCode里Archive好后，碰到Validate过不去的， 可以使用Applicat..."
 }
@@ -109,6 +109,14 @@
 <div class="paragraph">
 <p>JsonFX报错："Method not found: 'Default constructor not found&#8230;&#8203;ctor() of XXXXX"
 <a href="http://blog.csdn.net/huutu/article/details/43986079">IL2CPP的坑，瞎JB优化</a></p>
+</div>
+<div class="paragraph">
+<p><strong>System.ExecutionEngineException: Attempting to call method 'System.Reflection.MonoProperty::GetterAdapterFrame' for which no ahead of time (AOT) code was generated.</strong>
+<a href="http://forum.unity3d.com/threads/unity-5-0-3f2-il2cpp-problem-attempting-to-call-method-system-reflection-monoproperty-getteradapt.332335/">AOT对反射GetProperty().GetValue()支持不好</a></p>
+</div>
+<div class="paragraph">
+<p>解决方法：
+<a href="http://forum.unity3d.com/threads/118515-HOTween-a-fast-and-powerful-Unity-tween-engine/page15?p=891614&amp;viewfull=1#post891614">用GetProperty().GetGetMethod().Invoke()代替</a></p>
 </div>
         </section>
 

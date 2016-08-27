@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>把Express用于产品的最佳实践 - 第一篇：安全</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//hbbalfred.github.io/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//hbbalfred.github.io/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html" />
+    
+    <meta property="og:site_name" content="hbb&#x27;s space" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="把Express用于产品的最佳实践 - 第一篇：安全" />
+    <meta property="og:description" content="这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..." />
+    <meta property="og:url" content="https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html" />
+    <meta property="article:published_time" content="2016-08-26T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2016-08-27T11:19:14.303Z" />
+    <meta property="article:tag" content="node express" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="把Express用于产品的最佳实践 - 第一篇：安全" />
+    <meta name="twitter:description" content="这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..." />
+    <meta name="twitter:url" content="https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "hbb&#x27;s space",
+    "author": {
+        "@type": "Person",
+        "name": "hbb",
+        "image": "https://avatars.githubusercontent.com/u/174926?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://hbbalfred.github.io/"
+    },
+    "headline": "把Express用于产品的最佳实践 - 第一篇：安全",
+    "url": "https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html",
+    "datePublished": "2016-08-26T16:00:00.000Z",
+    "dateModified": "2016-08-27T11:19:14.303Z",
+    "keywords": "node express",
+    "description": "这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="hbb&#x27;s space" href="https://hbbalfred.github.io/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template tag-node-express">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://hbbalfred.github.io">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://hbbalfred.github.io/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post tag-node-express">
+
+        <header class="post-header">
+            <h1 class="post-title">把Express用于产品的最佳实践 - 第一篇：安全</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2016-08-27">27 August 2016</time>  on <a href="https://hbbalfred.github.io/tag/node-express">node express</a>
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__">概述</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>术语“<em>产品</em>”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为<em>产品环境</em>和<em>开发环境</em>。</p>
+</div>
+<div class="paragraph">
+<p>通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一个安全隐患。还有就是在开发环境中，不需要担心稳定性、可靠性及效率。</p>
+</div>
+<div class="paragraph">
+<p>这篇博客就来讲讲，对于采用Express的应用上线后，一些安全方面的最佳实践。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__express">不要使用废弃或漏洞版本的Express</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Express 2.x和3.x已停止维护，不会再修正安全和效率上的问题。不要使用它们！如果还未更新到版本4，可以根据 <a href="http://expressjs.com/guide/migrating-4.html">这篇引导</a>来升级你的程序。</p>
+</div>
+<div class="paragraph">
+<p>同时查看一下 <a href="http://expressjs.com/advanced/security-updates.html">安全升级页面</a>，确保没使用有漏洞的版本。如果正在用，先更新到最近的稳定版。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__tls">使用TLS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果需要传输敏感数据，请使用 <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Transport Layer Security(TLS)</a>保护连接和数据。这个技术会在客户端向服务器发送数据之前先对其加密，因而防御一些常见的（且容易）的攻击。虽然像Ajax以POST发送请求会看不到数据，像是被“隐藏”在浏览器中，但脆弱网络传输很容易被 <a href="https://en.wikipedia.org/wiki/Packet_analyzer">抓包</a>或者被 <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">中间人攻击</a>。</p>
+</div>
+<div class="paragraph">
+<p>如果你知道Secure Socket Layer(SSL)加密，那么 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380515(v=vs.85).aspx">TLS就是下一代的SSL</a>。换句话说，如果之前你在用SSL，可以考虑升级成TSL。一般来说，推荐使用Nginx处理TLS。这里有一篇不错的文章讲如何在Nginx（或其它服务器）上配置TLS， <a href="https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_Server_Configurations">推荐服务器配置(Mozilla Wiki).</a></p>
+</div>
+<div class="paragraph">
+<p>还有一个小工具 <a href="https://letsencrypt.org/about/">Let&#8217;s Encrypt</a>用来获得TLS证书，由 <a href="https://letsencrypt.org/isrg/">网络安全研究组织（ISRG)</a>提供：免费、自动的、开放认证授权（CA)。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__helmet">使用Helmet</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.npmjs.com/package/helmet">Helmet</a>会帮你抵御一些熟知的，通过设置HTTP头 发起的网络攻击。</p>
+</div>
+<div class="paragraph">
+<p>Helmet实质上是由9个中间价组成的集合，用来设置安全相关的HTTP头：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/helmetjs/csp">csp</a>设置<strong>Content-Security-Policy</strong>，保护跨站脚本攻击、跨站注入。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/hide-powered-by">hidePoweredBy</a>删除<strong>X-Powered-By</strong>。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/hpkp">hpkp</a>增加 <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Public_Key_Pinning">Public Key Pinning</a>，用来防御利用伪造证书的中间人攻击。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/hsts">hsts</a>设置<strong>Strict-Transport-Security</strong>，强制（HTTP通过SSl/TLS）安全连接服务器。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/ienoopen">ieNoOpen</a>针对IE8+设置<strong>X-Download-Options</strong>。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/nocache">noCache</a>设置<strong>Cache-Control</strong>和<strong>Pragma</strong>，禁止客户端缓存。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/dont-sniff-mimetype">noSniff</a>设置<strong>X-Content-Type-Options</strong> to prevent browsers from MIME-sniffing a response away from the declared content-type.</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/frameguard">frameguard</a>设置<strong>X-Frame-Options</strong>提供 <a href="https://www.owasp.org/index.php/Clickjacking">clickjacking</a>保护。</p>
+</li>
+<li>
+<p><a href="https://github.com/helmetjs/x-xss-protection">xssFilter</a>设置<strong>X-XSS-Protection</strong>激活跨站脚本(XSS)过滤。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>安装Helmet模块：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">npm install --save helmet</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后就像普通中间价一样使用：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">...
+var helmet = require('helmet');
+app.use(helmet());
+...</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__x_powered_by">至少屏蔽X-Powered-By</h4>
+<div class="paragraph">
+<p>如果不想用Helmet，至少要屏蔽<strong>X-Powered-By</strong>。攻击者会使用这个头（默认开启）检测是否是Express的应用，然后针对攻击。</p>
+</div>
+<div class="paragraph">
+<p>所以，最佳实践就是调用<strong>app.disable()</strong>方法关闭它：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">app.disable('x-powered-by');</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果用了Helmet，它会帮你做这件事。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__cookies">使用安全cookies</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>为确保cookies不会出问题，不要使用默认的cookie名称，同时设置好相应的cookie安全选项。</p>
+</div>
+<div class="paragraph">
+<p>主要有两个中间件模块：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.npmjs.com/package/express-session">express-session</a>替代Express 3.x内置的<strong>express.session</strong>。</p>
+</li>
+<li>
+<p><a href="https://www.npmjs.com/package/cookie-session">cookie-session</a>替代Express 3.x内置的<strong>express.cookieSession</strong>。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>其主要差别是如何保存cookit session数据。express-session把session数据存储在服务器上，cookie里只保存了session键。默认情况下使用内存存储，可见不是针对产品环境设计的。对于产品，需要一个可扩展的session存储，请查看 <a href="https://github.com/expressjs/session#compatible-session-stores">session存储兼容列表</a>。</p>
+</div>
+<div class="paragraph">
+<p>对应的，cookie-session实现了cookie端存储：把整个session序列化到cookie，而不是只存一个session键。这种只有在session数据很小并容易编码（基本值非对象）的情况下才适用。虽然浏览器对每份cookie提供了4096字节大小的支持，但为了保证不超出限制，最好不要超过4093字节。同样，考虑到客户端可以看到cookie数据，没任何安全可言，最好还是选择express-session。</p>
+</div>
+<div class="sect3">
+<h4 id="__session_cookie">不要使用默认的session cookie名称</h4>
+<div class="paragraph">
+<p>使用默认的session cookie名称等于把应用开放给攻击者。所导致的安全问题和<strong>X-Powered-By</strong>类似：攻击者会进行针对攻击。</p>
+</div>
+<div class="paragraph">
+<p>为此，可以采用一个没意义的cookie名称，以express-session举例：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var session = require('epress-session');
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+	secret: 's3Cur3',
+	name: 'sessionId'
+}));</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__cookie">设置cookie安全选项</h4>
+<div class="paragraph">
+<p>如下设置cookie选项，可以增加安全性：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>secure</strong> – 保证浏览器只能通过HTTPS发送cookie。</p>
+</li>
+<li>
+<p><strong>httpOnly</strong> – 保证浏览器不同用客户端JavaScript发送cookie，只能通过HTTP(S)发送，这样可以不受跨站脚本攻击。</p>
+</li>
+<li>
+<p><strong>domain</strong> – 指定域名。先判断指定的域名和请求服务器的域名是否匹配，匹配后会进行下一个属性path的匹配。</p>
+</li>
+<li>
+<p><strong>path</strong> – 指定路径。路径也匹配后，发送cookie。</p>
+</li>
+<li>
+<p><strong>expires</strong> – 设置数据的过期时间。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这里有一段使用cookie-session例子：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">var session = require('cookie-session');
+var express = require('express');
+var app = express();
+var expiryDate = new Date(Date.now() + 60*60*1000); // 1小时
+app.use(session({
+	name: 'session',
+	keys: ['key1', 'key2'],
+	cookie: {
+		secure: true,
+		httpOnly: true,
+		domain: 'example.com',
+		path: 'foo/bar',
+		expires: expiryDate
+	}
+}));</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">确保依赖库是安全的</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>使用npm可以有效、方便的管理应用程序，但有些包可能包含严重的安全问题。整个应用的安全程度就会像“木桶效应”那样。</p>
+</div>
+<div class="paragraph">
+<p>幸运的是，有两个工具可以保证第三方包的安全性： <a href="https://www.npmjs.com/package/nsp">nsp</a>和 <a href="https://requiresafe.com/">requireSafe</a>。这两个工具功能上几乎一样，都用可能会显得没必要，不过对于安全来说“宁愿多做，不要犯错”。</p>
+</div>
+<div class="paragraph">
+<p>nsp是一个命令行工具，它会检测 <a href="https://nodesecurity.io/">Node安全项目</a>的漏洞数据库来判定应用程序是否使用了有问题的包。安装如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">npm i nsp -g</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后使用命令提交项目的<strong>npm-shrinkwrap.json</strong>和<strong>package.json</strong>到 <a href="https://nodesecurity.io/">nodesecurity.io</a>进行验证。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">cd your-app
+nsp check</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>也可以用requireSafe审查模块：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">npm install -g requiresafe
+cd your-app
+requiresafe check</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">额外的考虑</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>这里有一份相当不错的 <a href="https://blog.risingstack.com/node-js-security-checklist/">Node.js安全检测规范</a>。这里列一部分出来：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>实现rate-limiting，预防暴力的认证攻击。安利一个方法 <a href="https://strongloop.com/node-js/api-gateway/">StrongLoop API Gateway</a>，或者使用比如 <a href="https://www.npmjs.com/package/express-limiter">express-limiter</a>的中间件，不过这样一来可能需要改代码。</p>
+</li>
+<li>
+<p>使用 <a href="https://www.npmjs.com/package/csurf">csurf</a>中间价，防御跨站伪造请求(CSRF)。</p>
+</li>
+<li>
+<p>始终过滤用户输入，保护跨站脚本(XSS)和命令行注入空间。</p>
+</li>
+<li>
+<p>使用参数化请求或者预设SQL语句，防御SQL注入攻击。</p>
+</li>
+<li>
+<p>使用开源 <a href="http://sqlmap.org/">sqlmap</a>工具，检测SQL注入漏洞。</p>
+</li>
+<li>
+<p>使用工具 <a href="https://nmap.org/">nmap</a>和 <a href="https://github.com/nabla-c0d3/sslyze">sslyze</a>测试SSL配置，ciphers, keys, and renegotiation 以及证书是否有效。</p>
+</li>
+<li>
+<p>使用 <a href="https://www.npmjs.com/package/safe-regex">safe-regex</a>确保正则表达式不会受到 <a href="https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS">正则表达式拒绝服务</a>的攻击。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">避免其它已知的漏洞</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>时刻关注 <a href="https://nodesecurity.io/advisories">Node安全项目顾问</a>，这是一个关于Node安全方面非常棒的资源项目。</p>
+</div>
+<div class="paragraph">
+<p>最后，像其它网络应用一样，Express应用也会遭到各种漏洞攻击。尽量熟悉 <a href="https://www.owasp.org/index.php/Top_10_2013-Top_10">网络漏洞</a>做好提前预防。</p>
+</div>
+<div class="paragraph">
+<p>你可能还会对这些感兴趣&#8230;&#8203;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://strongloop.com/strongblog/como-executar-o-gerenciador-de-processo-da-strongloop-em-producao/">Como executar o Gerenciador de Processo da StrongLoop em produção</a></p>
+</li>
+<li>
+<p><a href="https://strongloop.com/strongblog/boas-praticas-para-fazer-deploy-de-aplicacoes-node-js-em-producao/">Boas práticas para fazer deploy de aplicações Node.js em produção</a></p>
+</li>
+<li>
+<p><a href="https://strongloop.com/strongblog/user-based-authentication-with-loopback/">User-based Authentication with Loopback</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/174926?v=3)"><span class="hidden">hbb's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">hbb</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">shanghai</span>
+                    <span class="author-link icon-link"><a href="http://hbbalfred.github.io/">http://hbbalfred.github.io/</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=%E6%8A%8AExpress%E7%94%A8%E4%BA%8E%E4%BA%A7%E5%93%81%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%20-%20%E7%AC%AC%E4%B8%80%E7%AF%87%EF%BC%9A%E5%AE%89%E5%85%A8&amp;url=https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://hbbalfred.github.io">hbb&#x27;s space</a> &copy; 2016</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//hbbalfred.github.io/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-69417240-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

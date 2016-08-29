@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>把Express用于产品的最佳实践 - 第一篇：安全</title>
+    <title>把Express用于生产的最佳实践 - 第一篇：安全</title>
     <meta name="description" content="" />
 
     <meta name="HandheldFriendly" content="True" />
@@ -19,16 +19,16 @@
     
     <meta property="og:site_name" content="hbb&#x27;s space" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="把Express用于产品的最佳实践 - 第一篇：安全" />
-    <meta property="og:description" content="这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..." />
+    <meta property="og:title" content="把Express用于生产的最佳实践 - 第一篇：安全" />
+    <meta property="og:description" content="原文链接 这两篇博客是关于将Express用于生产环境的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及生产环境的一些重要概念。 概述 术语“生产”是指在软件生命周期内，一个应用或者API可以让终端用户或者说消费者使用的场景。相对开发阶段，仍在编写和测试代码，应用是不对外开放的。对应的系统环境分别称为生产环境和开发环境。 通常开发环境和生产环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于生产。举个例子，在开发环境中用来排错的大量日志信息，可能会在生产环境中成..." />
     <meta property="og:url" content="https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html" />
     <meta property="article:published_time" content="2016-08-26T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2016-08-27T11:19:14.303Z" />
+    <meta property="article:modified_time" content="2016-08-29T02:14:11.226Z" />
     <meta property="article:tag" content="node express" />
     
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="把Express用于产品的最佳实践 - 第一篇：安全" />
-    <meta name="twitter:description" content="这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..." />
+    <meta name="twitter:title" content="把Express用于生产的最佳实践 - 第一篇：安全" />
+    <meta name="twitter:description" content="原文链接 这两篇博客是关于将Express用于生产环境的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及生产环境的一些重要概念。 概述 术语“生产”是指在软件生命周期内，一个应用或者API可以让终端用户或者说消费者使用的场景。相对开发阶段，仍在编写和测试代码，应用是不对外开放的。对应的系统环境分别称为生产环境和开发环境。 通常开发环境和生产环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于生产。举个例子，在开发环境中用来排错的大量日志信息，可能会在生产环境中成..." />
     <meta name="twitter:url" content="https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html" />
     
     <script type="application/ld+json">
@@ -43,12 +43,12 @@
         "url": "undefined/author/undefined",
         "sameAs": "http://hbbalfred.github.io/"
     },
-    "headline": "把Express用于产品的最佳实践 - 第一篇：安全",
+    "headline": "把Express用于生产的最佳实践 - 第一篇：安全",
     "url": "https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html",
     "datePublished": "2016-08-26T16:00:00.000Z",
-    "dateModified": "2016-08-27T11:19:14.303Z",
+    "dateModified": "2016-08-29T02:14:11.226Z",
     "keywords": "node express",
-    "description": "这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。 概述 术语“产品”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为产品环境和开发环境。 通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一..."
+    "description": "原文链接 这两篇博客是关于将Express用于生产环境的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及生产环境的一些重要概念。 概述 术语“生产”是指在软件生命周期内，一个应用或者API可以让终端用户或者说消费者使用的场景。相对开发阶段，仍在编写和测试代码，应用是不对外开放的。对应的系统环境分别称为生产环境和开发环境。 通常开发环境和生产环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于生产。举个例子，在开发环境中用来排错的大量日志信息，可能会在生产环境中成..."
 }
     </script>
 
@@ -73,7 +73,7 @@
     <article class="post tag-node-express">
 
         <header class="post-header">
-            <h1 class="post-title">把Express用于产品的最佳实践 - 第一篇：安全</h1>
+            <h1 class="post-title">把Express用于生产的最佳实践 - 第一篇：安全</h1>
             <section class="post-meta">
                 <time class="post-date" datetime="2016-08-27">27 August 2016</time>  on <a href="https://hbbalfred.github.io/tag/node-express">node express</a>
             </section>
@@ -83,7 +83,10 @@
             <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。</p>
+<p><a href="https://strongloop.com/strongblog/best-practices-for-express-in-production-part-one-security/">原文链接</a></p>
+</div>
+<div class="paragraph">
+<p>这两篇博客是关于将Express用于生产环境的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及生产环境的一些重要概念。</p>
 </div>
 </div>
 </div>
@@ -91,10 +94,10 @@
 <h2 id="__">概述</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>术语“<em>产品</em>”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为<em>产品环境</em>和<em>开发环境</em>。</p>
+<p>术语“<em>生产</em>”是指在软件生命周期内，一个应用或者API可以让终端用户或者说消费者使用的场景。相对开发阶段，仍在编写和测试代码，应用是不对外开放的。对应的系统环境分别称为<em>生产环境</em>和<em>开发环境</em>。</p>
 </div>
 <div class="paragraph">
-<p>通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一个安全隐患。还有就是在开发环境中，不需要担心稳定性、可靠性及效率。</p>
+<p>通常开发环境和生产环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于生产。举个例子，在开发环境中用来排错的大量日志信息，可能会在生产环境中成为一个安全隐患。还有就是在开发环境中，不需要担心稳定性、可靠性及效率。</p>
 </div>
 <div class="paragraph">
 <p>这篇博客就来讲讲，对于采用Express的应用上线后，一些安全方面的最佳实践。</p>
@@ -105,7 +108,7 @@
 <h2 id="__express">不要使用废弃或漏洞版本的Express</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Express 2.x和3.x已停止维护，不会再修正安全和效率上的问题。不要使用它们！如果还未更新到版本4，可以根据 <a href="http://expressjs.com/guide/migrating-4.html">这篇引导</a>来升级你的程序。</p>
+<p>Express 2.x和3.x已停止维护，不会再修正安全和效率上的问题。不要使用它们！如果还未更新到版本4，可以根据 <a href="http://expressjs.com/guide/migrating-4.html">这篇引导</a>来升级程序。</p>
 </div>
 <div class="paragraph">
 <p>同时查看一下 <a href="http://expressjs.com/advanced/security-updates.html">安全升级页面</a>，确保没使用有漏洞的版本。如果正在用，先更新到最近的稳定版。</p>
@@ -116,13 +119,13 @@
 <h2 id="__tls">使用TLS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>如果需要传输敏感数据，请使用 <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Transport Layer Security(TLS)</a>保护连接和数据。这个技术会在客户端向服务器发送数据之前先对其加密，因而防御一些常见的（且容易）的攻击。虽然像Ajax以POST发送请求会看不到数据，像是被“隐藏”在浏览器中，但脆弱网络传输很容易被 <a href="https://en.wikipedia.org/wiki/Packet_analyzer">抓包</a>或者被 <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">中间人攻击</a>。</p>
+<p>如果需要传输敏感数据，请使用 <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Transport Layer Security(TLS)</a>保护连接和数据。这个技术会在客户端向服务器发送数据之前先对其加密，因而防御一些常见的（容易的）攻击。虽然像Ajax以POST发送请求会看不到数据，像是被“隐藏”在浏览器中，但脆弱的网络传输很容易被 <a href="https://en.wikipedia.org/wiki/Packet_analyzer">抓包</a>或者被 <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">中间人攻击</a>。</p>
 </div>
 <div class="paragraph">
 <p>如果你知道Secure Socket Layer(SSL)加密，那么 <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa380515(v=vs.85).aspx">TLS就是下一代的SSL</a>。换句话说，如果之前你在用SSL，可以考虑升级成TSL。一般来说，推荐使用Nginx处理TLS。这里有一篇不错的文章讲如何在Nginx（或其它服务器）上配置TLS， <a href="https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_Server_Configurations">推荐服务器配置(Mozilla Wiki).</a></p>
 </div>
 <div class="paragraph">
-<p>还有一个小工具 <a href="https://letsencrypt.org/about/">Let&#8217;s Encrypt</a>用来获得TLS证书，由 <a href="https://letsencrypt.org/isrg/">网络安全研究组织（ISRG)</a>提供：免费、自动的、开放认证授权（CA)。</p>
+<p>还有 <a href="https://letsencrypt.org/about/">Let&#8217;s Encrypt</a>用来获得TLS证书，由 <a href="https://letsencrypt.org/isrg/">网络安全研究组织（ISRG)</a>提供：免费、自动的、开放认证授权（CA)。</p>
 </div>
 </div>
 </div>
@@ -138,7 +141,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/helmetjs/csp">csp</a>设置<strong>Content-Security-Policy</strong>，保护跨站脚本攻击、跨站注入。</p>
+<p><a href="https://github.com/helmetjs/csp">csp</a>设置<strong>Content-Security-Policy</strong>，抵御跨站脚本攻击、跨站注入。</p>
 </li>
 <li>
 <p><a href="https://github.com/helmetjs/hide-powered-by">hidePoweredBy</a>删除<strong>X-Powered-By</strong>。</p>
@@ -188,7 +191,7 @@ app.use(helmet());
 <div class="sect3">
 <h4 id="__x_powered_by">至少屏蔽X-Powered-By</h4>
 <div class="paragraph">
-<p>如果不想用Helmet，至少要屏蔽<strong>X-Powered-By</strong>。攻击者会使用这个头（默认开启）检测是否是Express的应用，然后针对攻击。</p>
+<p>如果不想用Helmet，至少要屏蔽<strong>X-Powered-By</strong>。攻击者会利用这个头（默认开启）检测是否是Express的应用，然后针对攻击。</p>
 </div>
 <div class="paragraph">
 <p>所以，最佳实践就是调用<strong>app.disable()</strong>方法关闭它：</p>
@@ -224,7 +227,7 @@ app.use(helmet());
 </ul>
 </div>
 <div class="paragraph">
-<p>其主要差别是如何保存cookit session数据。express-session把session数据存储在服务器上，cookie里只保存了session键。默认情况下使用内存存储，可见不是针对产品环境设计的。对于产品，需要一个可扩展的session存储，请查看 <a href="https://github.com/expressjs/session#compatible-session-stores">session存储兼容列表</a>。</p>
+<p>其主要差别是如何保存cookit session数据。express-session把session数据存储在服务器上，cookie里只保存了session键。默认情况下使用内存存储，可见不是针对生产环境设计的。对于生产，需要一个可扩展的session存储，请查看 <a href="https://github.com/expressjs/session#compatible-session-stores">session存储兼容列表</a>。</p>
 </div>
 <div class="paragraph">
 <p>对应的，cookie-session实现了cookie端存储：把整个session序列化到cookie，而不是只存一个session键。这种只有在session数据很小并容易编码（基本值非对象）的情况下才适用。虽然浏览器对每份cookie提供了4096字节大小的支持，但为了保证不超出限制，最好不要超过4093字节。同样，考虑到客户端可以看到cookie数据，没任何安全可言，最好还是选择express-session。</p>
@@ -232,7 +235,7 @@ app.use(helmet());
 <div class="sect3">
 <h4 id="__session_cookie">不要使用默认的session cookie名称</h4>
 <div class="paragraph">
-<p>使用默认的session cookie名称等于把应用开放给攻击者。所导致的安全问题和<strong>X-Powered-By</strong>类似：攻击者会进行针对攻击。</p>
+<p>使用默认的session cookie名称等于把应用开放给攻击者。所导致的安全问题和<strong>X-Powered-By</strong>类似：攻击者会针对攻击。</p>
 </div>
 <div class="paragraph">
 <p>为此，可以采用一个没意义的cookie名称，以express-session举例：</p>
@@ -259,7 +262,7 @@ app.use(session({
 <p><strong>secure</strong> – 保证浏览器只能通过HTTPS发送cookie。</p>
 </li>
 <li>
-<p><strong>httpOnly</strong> – 保证浏览器不同用客户端JavaScript发送cookie，只能通过HTTP(S)发送，这样可以不受跨站脚本攻击。</p>
+<p><strong>httpOnly</strong> – 保证浏览器不用客户端JavaScript发送cookie，只能通过HTTP(S)发送，这样可以不受跨站脚本攻击。</p>
 </li>
 <li>
 <p><strong>domain</strong> – 指定域名。先判断指定的域名和请求服务器的域名是否匹配，匹配后会进行下一个属性path的匹配。</p>
@@ -344,7 +347,7 @@ requiresafe check</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>实现rate-limiting，预防暴力的认证攻击。安利一个方法 <a href="https://strongloop.com/node-js/api-gateway/">StrongLoop API Gateway</a>，或者使用比如 <a href="https://www.npmjs.com/package/express-limiter">express-limiter</a>的中间件，不过这样一来可能需要改代码。</p>
+<p>实现rate-limiting，预防暴力的认证攻击。安利一个方法 <a href="https://strongloop.com/node-js/api-gateway/">StrongLoop API Gateway</a>，或者使用比如 <a href="https://www.npmjs.com/package/express-limiter">express-limiter</a>的中间件，不过这样可能需要改代码。</p>
 </li>
 <li>
 <p>使用 <a href="https://www.npmjs.com/package/csurf">csurf</a>中间价，防御跨站伪造请求(CSRF)。</p>
@@ -372,7 +375,7 @@ requiresafe check</code></pre>
 <h2 id="___4">避免其它已知的漏洞</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>时刻关注 <a href="https://nodesecurity.io/advisories">Node安全项目顾问</a>，这是一个关于Node安全方面非常棒的资源项目。</p>
+<p>时刻关注 <a href="https://nodesecurity.io/advisories">Node安全项目顾问</a>，这是一个非常棒的关于Node安全方面的项目。</p>
 </div>
 <div class="paragraph">
 <p>最后，像其它网络应用一样，Express应用也会遭到各种漏洞攻击。尽量熟悉 <a href="https://www.owasp.org/index.php/Top_10_2013-Top_10">网络漏洞</a>做好提前预防。</p>
@@ -417,7 +420,7 @@ requiresafe check</code></pre>
 
             <section class="share">
                 <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/share?text=%E6%8A%8AExpress%E7%94%A8%E4%BA%8E%E4%BA%A7%E5%93%81%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%20-%20%E7%AC%AC%E4%B8%80%E7%AF%87%EF%BC%9A%E5%AE%89%E5%85%A8&amp;url=https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html"
+                <a class="icon-twitter" href="https://twitter.com/share?text=%E6%8A%8AExpress%E7%94%A8%E4%BA%8E%E7%94%9F%E4%BA%A7%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%20-%20%E7%AC%AC%E4%B8%80%E7%AF%87%EF%BC%9A%E5%AE%89%E5%85%A8&amp;url=https://hbbalfred.github.io/2016/08/27/Best-Practices-for-Express-in-Production-Part-One-Security.html"
                     onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>

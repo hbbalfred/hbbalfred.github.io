@@ -1,30 +1,32 @@
-= 把Express用于产品的最佳实践 - 第一篇：安全
+= 把Express用于生产的最佳实践 - 第一篇：安全
 :hp-tags: node express
 :hp-alt-title: Best Practices for Express in Production – Part One: Security
 
-这两篇博客是关于在产品环境中运行Express的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及产品环境的一些重要概念和主题。
+https://strongloop.com/strongblog/best-practices-for-express-in-production-part-one-security/[原文链接]
+
+这两篇博客是关于将Express用于生产环境的最佳实践。第一篇主要讲安全，第二篇是效率和可靠性。这里假设你已经熟悉了Node.js和网络开发的基本内容，以及生产环境的一些重要概念。
 
 ## 概述
 
-术语“_产品_”是指在软件生命周期内，一个应用或者API可以让终端用户或消费者使用的场景。相对开发阶段，仍在编写和测试代码，则应用是不对外开放的。对应的系统环境分别称为_产品环境_和_开发环境_。
+术语“_生产_”是指在软件生命周期内，一个应用或者API可以让终端用户或者说消费者使用的场景。相对开发阶段，仍在编写和测试代码，应用是不对外开放的。对应的系统环境分别称为_生产环境_和_开发环境_。
 
-通常开发环境和产品环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于产品。举个例子，在开发环境中用来排错的大量日志信息，可能会在产品环境中成为一个安全隐患。还有就是在开发环境中，不需要担心稳定性、可靠性及效率。
+通常开发环境和生产环境在设置上有很大差异，且需求也明显不同。经常会出现在开发中OK的事项，无法适用于生产。举个例子，在开发环境中用来排错的大量日志信息，可能会在生产环境中成为一个安全隐患。还有就是在开发环境中，不需要担心稳定性、可靠性及效率。
 
 这篇博客就来讲讲，对于采用Express的应用上线后，一些安全方面的最佳实践。
 
 ## 不要使用废弃或漏洞版本的Express
 
-Express 2.x和3.x已停止维护，不会再修正安全和效率上的问题。不要使用它们！如果还未更新到版本4，可以根据 http://expressjs.com/guide/migrating-4.html[这篇引导]来升级你的程序。
+Express 2.x和3.x已停止维护，不会再修正安全和效率上的问题。不要使用它们！如果还未更新到版本4，可以根据 http://expressjs.com/guide/migrating-4.html[这篇引导]来升级程序。
 
 同时查看一下 http://expressjs.com/advanced/security-updates.html[安全升级页面]，确保没使用有漏洞的版本。如果正在用，先更新到最近的稳定版。
 
 ## 使用TLS
 
-如果需要传输敏感数据，请使用 https://en.wikipedia.org/wiki/Transport_Layer_Security[Transport Layer Security(TLS)]保护连接和数据。这个技术会在客户端向服务器发送数据之前先对其加密，因而防御一些常见的（且容易）的攻击。虽然像Ajax以POST发送请求会看不到数据，像是被“隐藏”在浏览器中，但脆弱网络传输很容易被 https://en.wikipedia.org/wiki/Packet_analyzer[抓包]或者被 https://en.wikipedia.org/wiki/Man-in-the-middle_attack[中间人攻击]。
+如果需要传输敏感数据，请使用 https://en.wikipedia.org/wiki/Transport_Layer_Security[Transport Layer Security(TLS)]保护连接和数据。这个技术会在客户端向服务器发送数据之前先对其加密，因而防御一些常见的（容易的）攻击。虽然像Ajax以POST发送请求会看不到数据，像是被“隐藏”在浏览器中，但脆弱的网络传输很容易被 https://en.wikipedia.org/wiki/Packet_analyzer[抓包]或者被 https://en.wikipedia.org/wiki/Man-in-the-middle_attack[中间人攻击]。
 
 如果你知道Secure Socket Layer(SSL)加密，那么 https://msdn.microsoft.com/en-us/library/windows/desktop/aa380515(v=vs.85).aspx[TLS就是下一代的SSL]。换句话说，如果之前你在用SSL，可以考虑升级成TSL。一般来说，推荐使用Nginx处理TLS。这里有一篇不错的文章讲如何在Nginx（或其它服务器）上配置TLS， https://wiki.mozilla.org/Security/Server_Side_TLS#Recommended_Server_Configurations[推荐服务器配置(Mozilla Wiki).]
 
-还有一个小工具 https://letsencrypt.org/about/[Let's Encrypt]用来获得TLS证书，由 https://letsencrypt.org/isrg/[网络安全研究组织（ISRG)]提供：免费、自动的、开放认证授权（CA)。
+还有 https://letsencrypt.org/about/[Let's Encrypt]用来获得TLS证书，由 https://letsencrypt.org/isrg/[网络安全研究组织（ISRG)]提供：免费、自动的、开放认证授权（CA)。
 
 ## 使用Helmet
 
@@ -32,7 +34,7 @@ https://www.npmjs.com/package/helmet[Helmet]会帮你抵御一些熟知的，通
 
 Helmet实质上是由9个中间价组成的集合，用来设置安全相关的HTTP头：
 
-* https://github.com/helmetjs/csp[csp]设置*Content-Security-Policy*，保护跨站脚本攻击、跨站注入。
+* https://github.com/helmetjs/csp[csp]设置*Content-Security-Policy*，抵御跨站脚本攻击、跨站注入。
 * https://github.com/helmetjs/hide-powered-by[hidePoweredBy]删除*X-Powered-By*。
 * https://github.com/helmetjs/hpkp[hpkp]增加 https://developer.mozilla.org/en-US/docs/Web/Security/Public_Key_Pinning[Public Key Pinning]，用来防御利用伪造证书的中间人攻击。
 * https://github.com/helmetjs/hsts[hsts]设置*Strict-Transport-Security*，强制（HTTP通过SSl/TLS）安全连接服务器。
@@ -58,7 +60,7 @@ app.use(helmet());
 
 #### 至少屏蔽X-Powered-By
 
-如果不想用Helmet，至少要屏蔽*X-Powered-By*。攻击者会使用这个头（默认开启）检测是否是Express的应用，然后针对攻击。
+如果不想用Helmet，至少要屏蔽*X-Powered-By*。攻击者会利用这个头（默认开启）检测是否是Express的应用，然后针对攻击。
 
 所以，最佳实践就是调用*app.disable()*方法关闭它：
 ```javascript
@@ -75,13 +77,13 @@ app.disable('x-powered-by');
 * https://www.npmjs.com/package/express-session[express-session]替代Express 3.x内置的*express.session*。
 * https://www.npmjs.com/package/cookie-session[cookie-session]替代Express 3.x内置的*express.cookieSession*。
 
-其主要差别是如何保存cookit session数据。express-session把session数据存储在服务器上，cookie里只保存了session键。默认情况下使用内存存储，可见不是针对产品环境设计的。对于产品，需要一个可扩展的session存储，请查看 https://github.com/expressjs/session#compatible-session-stores[session存储兼容列表]。
+其主要差别是如何保存cookit session数据。express-session把session数据存储在服务器上，cookie里只保存了session键。默认情况下使用内存存储，可见不是针对生产环境设计的。对于生产，需要一个可扩展的session存储，请查看 https://github.com/expressjs/session#compatible-session-stores[session存储兼容列表]。
 
 对应的，cookie-session实现了cookie端存储：把整个session序列化到cookie，而不是只存一个session键。这种只有在session数据很小并容易编码（基本值非对象）的情况下才适用。虽然浏览器对每份cookie提供了4096字节大小的支持，但为了保证不超出限制，最好不要超过4093字节。同样，考虑到客户端可以看到cookie数据，没任何安全可言，最好还是选择express-session。
 
 #### 不要使用默认的session cookie名称
 
-使用默认的session cookie名称等于把应用开放给攻击者。所导致的安全问题和*X-Powered-By*类似：攻击者会进行针对攻击。
+使用默认的session cookie名称等于把应用开放给攻击者。所导致的安全问题和*X-Powered-By*类似：攻击者会针对攻击。
 
 为此，可以采用一个没意义的cookie名称，以express-session举例：
 ```javascript
@@ -97,7 +99,7 @@ app.use(session({
 如下设置cookie选项，可以增加安全性：
 
 * *secure* – 保证浏览器只能通过HTTPS发送cookie。
-* *httpOnly* – 保证浏览器不同用客户端JavaScript发送cookie，只能通过HTTP(S)发送，这样可以不受跨站脚本攻击。
+* *httpOnly* – 保证浏览器不用客户端JavaScript发送cookie，只能通过HTTP(S)发送，这样可以不受跨站脚本攻击。
 * *domain* – 指定域名。先判断指定的域名和请求服务器的域名是否匹配，匹配后会进行下一个属性path的匹配。
 * *path* – 指定路径。路径也匹配后，发送cookie。
 * *expires* – 设置数据的过期时间。
@@ -150,7 +152,7 @@ requiresafe check
 
 这里有一份相当不错的 https://blog.risingstack.com/node-js-security-checklist/[Node.js安全检测规范]。这里列一部分出来：
 
-* 实现rate-limiting，预防暴力的认证攻击。安利一个方法 https://strongloop.com/node-js/api-gateway/[StrongLoop API Gateway]，或者使用比如 https://www.npmjs.com/package/express-limiter[express-limiter]的中间件，不过这样一来可能需要改代码。
+* 实现rate-limiting，预防暴力的认证攻击。安利一个方法 https://strongloop.com/node-js/api-gateway/[StrongLoop API Gateway]，或者使用比如 https://www.npmjs.com/package/express-limiter[express-limiter]的中间件，不过这样可能需要改代码。
 * 使用 https://www.npmjs.com/package/csurf[csurf]中间价，防御跨站伪造请求(CSRF)。
 * 始终过滤用户输入，保护跨站脚本(XSS)和命令行注入空间。
 * 使用参数化请求或者预设SQL语句，防御SQL注入攻击。
@@ -160,7 +162,7 @@ requiresafe check
 
 ## 避免其它已知的漏洞
 
-时刻关注 https://nodesecurity.io/advisories[Node安全项目顾问]，这是一个关于Node安全方面非常棒的资源项目。
+时刻关注 https://nodesecurity.io/advisories[Node安全项目顾问]，这是一个非常棒的关于Node安全方面的项目。
 
 最后，像其它网络应用一样，Express应用也会遭到各种漏洞攻击。尽量熟悉 https://www.owasp.org/index.php/Top_10_2013-Top_10[网络漏洞]做好提前预防。
 
@@ -169,45 +171,4 @@ requiresafe check
 * https://strongloop.com/strongblog/como-executar-o-gerenciador-de-processo-da-strongloop-em-producao/[Como executar o Gerenciador de Processo da StrongLoop em produção]
 * https://strongloop.com/strongblog/boas-praticas-para-fazer-deploy-de-aplicacoes-node-js-em-producao/[Boas práticas para fazer deploy de aplicações Node.js em produção]
 * https://strongloop.com/strongblog/user-based-authentication-with-loopback/[User-based Authentication with Loopback]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
